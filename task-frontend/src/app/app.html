@@ -1,0 +1,73 @@
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Gestor de Tareas</h1>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            Crear Nueva Tarea
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="onSubmit()">
+                <div class="row g-3 align-items-end">
+                    
+                    <div class="col-md-6">
+                        <label for="title" class="form-label">Título (Obligatorio)</label>
+                        <input type="text" id="title" class="form-control" 
+                               [(ngModel)]="newTask.title" name="title" required placeholder="Ej: Comprar leche">
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label for="dueDate" class="form-label">Fecha Límite (Opcional)</label>
+                        <input type="date" id="dueDate" class="form-control" 
+                               [(ngModel)]="newTask.dueDate" name="dueDate">
+                    </div>
+                    
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mb-3">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn"
+                    [class.btn-dark]="currentStatus === 'all'"
+                    [class.btn-outline-dark]="currentStatus !== 'all'"
+                    (click)="filterTasks('all')">Todas</button>
+
+            <button type="button" class="btn"
+                    [class.btn-warning]="currentStatus === 'pending'"
+                    [class.btn-outline-warning]="currentStatus !== 'pending'"
+                    (click)="filterTasks('pending')">Pendientes</button>
+
+            <button type="button" class="btn"
+                    [class.btn-success]="currentStatus === 'done'"
+                    [class.btn-outline-success]="currentStatus !== 'done'"
+                    (click)="filterTasks('done')">Completadas</button>
+        </div>
+    </div>
+
+    <ul class="list-group">
+        <li *ngIf="tasks.length === 0" class="list-group-item text-center text-muted">
+            No hay tareas para el estado '{{ currentStatus }}'.
+        </li>
+        
+        <li *ngFor="let task of tasks" class="list-group-item d-flex justify-content-between align-items-center"
+            [class.list-group-item-success]="task.done"
+            [class.list-group-item-light]="!task.done">
+            
+            <div [class.text-decoration-line-through]="task.done" class="py-1">
+                <strong class="me-2">{{ task.title }}</strong>
+                <span *ngIf="task.dueDate" class="badge bg-secondary">Vence: {{ task.dueDate }}</span>
+            </div>
+            
+            <span *ngIf="task.done" class="badge bg-success">HECHA</span>
+            <span *ngIf="!task.done" class="badge bg-warning text-dark">PENDIENTE</span>
+        </li>
+    </ul>
+
+</div>
